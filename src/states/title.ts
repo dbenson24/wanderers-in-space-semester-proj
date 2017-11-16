@@ -1,4 +1,5 @@
 import * as Assets from '../assets';
+import { Physics } from 'phaser-ce';
 
 export default class Title extends Phaser.State {
     private backgroundTemplateSprite: Phaser.Sprite = null;
@@ -10,15 +11,37 @@ export default class Title extends Phaser.State {
     private blurYFilter: Phaser.Filter.BlurY = null;
     private sfxAudiosprite: Phaser.AudioSprite = null;
     private mummySpritesheet: Phaser.Sprite = null;
+    
+    private mummyBody: Phaser.Physics.P2.Body;
 
     // This is any[] not string[] due to a limitation in TypeScript at the moment;
     // despite string enums working just fine, they are not officially supported so we trick the compiler into letting us do it anyway.
     private sfxLaserSounds: any[] = null;
 
     public create(): void {
+
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesBackgroundTemplate.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
 
+        this.game.physics.startSystem(Phaser.Physics.P2JS);
+
+        this.mummySpritesheet = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
+        
+
+        let p2 = this.game.physics.p2;
+        p2.applyGravity = true;
+
+        //this.mummyBody = new Physics.P2.Body(this.game, this.mummySpritesheet, this.game.world.centerX, this.game.world.centerY, 1.0);
+    
+        //p2.addBody(this.mummyBody);
+
+        p2.gravity.y = 9.8;
+        p2.enableBody(this.mummySpritesheet, true);
+
+        this.mummyBody = this.mummySpritesheet.body;
+
+
+        /*
         this.googleFontText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 100, 'Google Web Fonts', {
             font: '50px ' + Assets.GoogleWebFonts.Barrio
         });
@@ -70,5 +93,9 @@ export default class Title extends Phaser.State {
         });
 
         this.game.camera.flash(0x000000, 1000);
+        */
+    }
+    public update(game: Phaser.Game) {
+        this.mummyBody.thrustRight(5);
     }
 }
