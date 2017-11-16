@@ -1,6 +1,9 @@
 import * as Assets from '../assets';
 import { Physics, scaleModes } from 'phaser-ce';
 
+import {Point, GravityPhysics, GravityBody, BasicGravityBody} from "../physics";
+
+
 export default class Title extends Phaser.State {
     private backgroundTemplateSprite: Phaser.Sprite = null;
     private googleFontText: Phaser.Text = null;
@@ -17,11 +20,17 @@ export default class Title extends Phaser.State {
     private planetBody: Phaser.Physics.P2.Body;
     private collGroup: Phaser.Physics.P2.CollisionGroup;
 
+    private gravityPhysics: GravityPhysics;
+
     // This is any[] not string[] due to a limitation in TypeScript at the moment;
     // despite string enums working just fine, they are not officially supported so we trick the compiler into letting us do it anyway.
     private sfxLaserSounds: any[] = null;
 
     public create(): void {
+
+        let metersPerPixel = 20.0;
+        let frameRate = 1.0/60.0;
+        this.gravityPhysics = new GravityPhysics(metersPerPixel, frameRate);
 
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesBackgroundTemplate.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
@@ -32,7 +41,7 @@ export default class Title extends Phaser.State {
         this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 200, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
         this.planetMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
         
-
+        /*
         let p2 = this.game.physics.p2;
 
         p2.enableBody(this.moveableMummy, true);
@@ -49,7 +58,16 @@ export default class Title extends Phaser.State {
 
         let push = (Math.sqrt(this.planetBody.data.mass) / Math.sqrt(p2.pxm(200))) / this.mummyBody.data.mass;
 
-        this.mummyBody.thrustRight(push);
+        this.mummyBody.thrustRight(p2.mpx(push));
+        */
+
+        let movingBody = new BasicGravityBody(this.moveableMummy, metersPerPixel, 0.1);
+        let stationaryBody = new BasicGravityBody(this.planetMummy, metersPerPixel, 10000.0);
+
+        this.gravityPhysics.addBody(movingBody);
+        this.gravityPhysics.addBody(stationaryBody);
+
+        movingBody.vx = Math.sqrt(stationaryBody.mass / this.gravityPhysics.distanceBetween(movingBody.loc, stationaryBody.loc));
 
         /*
         this.googleFontText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 100, 'Google Web Fonts', {
@@ -106,33 +124,9 @@ export default class Title extends Phaser.State {
         */
     }
     public update(game: Phaser.Game) {
-
-        let rawForce = (this.mummyBody.data.mass * this.planetBody.data.mass) / this.distanceBetween(this.mummyBody, this.planetBody);
-        let angle = this.getAngleTo(this.mummyBody, this.planetBody);
-        
-        let forceX = rawForce * Math.cos(angle);
-        let forceY = rawForce * Math.sin(angle);
-
-        this.mummyBody.thrustRight(forceX);
-        this.mummyBody.thrust(-forceY);
-
+        this.gravityPhysics.updateBodyPositions();
     }
 
-    private distanceBetween(b1: Phaser.Physics.P2.Body, b2: Phaser.Physics.P2.Body): number {
-        let p2 = this.physics.p2;
-        let dx = p2.pxm(b1.x) - p2.pxm(b2.x);
-        let dy = p2.pxm(b1.y) - p2.pxm(b2.y);
-        if (Math.abs(dx) < 0.001) {
-            dx = 0;
-        }
-        if (Math.abs(dy) < 0.001) {
-            dy = 0;
-        }
-        return Math.sqrt((dx * dx) + (dy * dy));
-    }
 
-    private getAngleTo(source: Phaser.Physics.P2.Body, target: Phaser.Physics.P2.Body): number {
-        let p2 = this.physics.p2;
-        return Math.atan2(p2.pxm(target.y) - p2.pxm(source.y), p2.pxm(target.x) - p2.pxm(source.x));
-    }
+
 }
