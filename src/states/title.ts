@@ -1,5 +1,5 @@
 import * as Assets from '../assets';
-import { Physics } from 'phaser-ce';
+import { Physics, scaleModes } from 'phaser-ce';
 
 export default class Title extends Phaser.State {
     private backgroundTemplateSprite: Phaser.Sprite = null;
@@ -10,9 +10,11 @@ export default class Title extends Phaser.State {
     private blurXFilter: Phaser.Filter.BlurX = null;
     private blurYFilter: Phaser.Filter.BlurY = null;
     private sfxAudiosprite: Phaser.AudioSprite = null;
-    private mummySpritesheet: Phaser.Sprite = null;
+    private moveableMummy: Phaser.Sprite = null;
+    private planetMummy: Phaser.Sprite = null;
     
     private mummyBody: Phaser.Physics.P2.Body;
+    private planetBody: Phaser.Physics.P2.Body;
 
     // This is any[] not string[] due to a limitation in TypeScript at the moment;
     // despite string enums working just fine, they are not officially supported so we trick the compiler into letting us do it anyway.
@@ -25,20 +27,23 @@ export default class Title extends Phaser.State {
 
         this.game.physics.startSystem(Phaser.Physics.P2JS);
 
-        this.mummySpritesheet = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
+        this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY+200, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
+        this.planetMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
         
 
         let p2 = this.game.physics.p2;
-        p2.applyGravity = true;
 
-        //this.mummyBody = new Physics.P2.Body(this.game, this.mummySpritesheet, this.game.world.centerX, this.game.world.centerY, 1.0);
-    
-        //p2.addBody(this.mummyBody);
+        p2.enableBody(this.moveableMummy, true);
+        p2.enableBody(this.planetMummy, false);
 
-        p2.gravity.y = 9.8;
-        p2.enableBody(this.mummySpritesheet, true);
+        this.mummyBody = this.moveableMummy.body;
+        this.mummyBody.data.mass = 10;
+        this.mummyBody.collides(2);
 
-        this.mummyBody = this.mummySpritesheet.body;
+        this.planetBody = this.planetMummy.body;
+        this.planetBody.dynamic = false;
+        this.planetBody.data.mass = 10000;
+        this.planetBody.collides(1);
 
 
         /*
@@ -96,6 +101,32 @@ export default class Title extends Phaser.State {
         */
     }
     public update(game: Phaser.Game) {
-        this.mummyBody.thrustRight(5);
+
+        let rawForce = .01 * (this.mummyBody.data.mass * this.planetBody.data.mass) / this.distanceBetween(this.mummyBody, this.planetBody);
+        let angle = this.getAngleTo(this.mummyBody, this.planetBody);
+        
+        let forceX = rawForce * Math.cos(angle);
+        let forceY = rawForce * Math.sin(angle);
+
+        this.mummyBody.thrustRight(forceX);
+        this.mummyBody.thrust(-forceY);
+    }
+
+    private distanceBetween(b1: Phaser.Physics.P2.Body, b2: Phaser.Physics.P2.Body): number {
+        let p2 = this.physics.p2;
+        let dx = p2.pxm(b1.x) - p2.pxm(b2.x);
+        let dy = p2.pxm(b1.y) - p2.pxm(b2.y);
+        if (Math.abs(dx) < 0.001) {
+            dx = 0;
+        }
+        if (Math.abs(dy) < 0.001) {
+            dy = 0;
+        }
+        return Math.sqrt((dx * dx) + (dy * dy));
+    }
+
+    private getAngleTo(source: Phaser.Physics.P2.Body, target: Phaser.Physics.P2.Body): number {
+        let p2 = this.physics.p2;
+        return Math.atan2(p2.pxm(target.y) - p2.pxm(source.y), p2.pxm(target.x) - p2.pxm(source.x));
     }
 }
