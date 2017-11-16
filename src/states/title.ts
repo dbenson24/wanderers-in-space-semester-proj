@@ -62,7 +62,7 @@ export default class Title extends Phaser.State {
         */
 
         let movingBody = new BasicGravityBody(this.moveableMummy, metersPerPixel, 0.1);
-        let stationaryBody = new BasicGravityBody(this.planetMummy, metersPerPixel, 10000.0);
+        let stationaryBody = new BasicGravityBody(this.planetMummy, metersPerPixel, 1000000000.0);
 
         this.gravityPhysics.addBody(movingBody);
         this.gravityPhysics.addBody(stationaryBody);

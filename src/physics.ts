@@ -25,7 +25,7 @@ export class GravityPhysics {
                 if (target == curr) {
                     return;
                 }
-                let rawForce = (curr.mass * target.mass) / this.distanceBetween(curr.loc, target.loc);
+                let rawForce = (curr.mass * target.mass) / Math.pow(this.distanceBetween(curr.loc, target.loc), 2);
                 let angle = this.getAngleTo(curr.loc, target.loc);
                 let dforceX = rawForce * Math.cos(angle);
                 let dforceY = rawForce * Math.sin(angle);
@@ -35,8 +35,8 @@ export class GravityPhysics {
             let accelX = forceX / curr.mass;
             let accelY = forceY / curr.mass;
 
-            curr.vx += accelX;
-            curr.vy += accelY;
+            curr.vx += accelX * this.tickRate;
+            curr.vy += accelY * this.tickRate;
         })
 
         this.bodies.map((curr) => {
