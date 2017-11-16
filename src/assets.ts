@@ -6,6 +6,13 @@ export namespace Images {
 
         static getPNG(): string { return require('assets/images/background_template.png'); }
     }
+    
+    export class ImagesPlanet1 {
+        static getName(): string { return 'planet1'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet1.png'); }
+    
+    }
 }
 
 export namespace Spritesheets {

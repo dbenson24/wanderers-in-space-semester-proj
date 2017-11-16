@@ -39,8 +39,10 @@ export default class Title extends Phaser.State {
         this.collGroup = this.physics.p2.createCollisionGroup();
 
         this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 200, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
-        this.planetMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
+        this.planetMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesPlanet1.getName());
         
+        this.planetMummy.scale.x = 0.2;
+        this.planetMummy.scale.y = 0.2;
         /*
         let p2 = this.game.physics.p2;
 

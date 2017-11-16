@@ -18,12 +18,15 @@ export class GravityPhysics {
     }
 
     public updateBodyPositions() {
-        this.bodies.map((curr) => {
+
+        for (let i = 0; i < this.bodies.length; i++) {
+            let curr = this.bodies[i];
             let forceX = 0;
             let forceY = 0;
-            this.bodies.map((target) => {
+            for (let j = 0; j < this.bodies.length; j++) {
+                let target = this.bodies[j];
                 if (target == curr) {
-                    return;
+                    continue;
                 }
                 let rawForce = (curr.mass * target.mass) / Math.pow(this.distanceBetween(curr.loc, target.loc), 2);
                 let angle = this.getAngleTo(curr.loc, target.loc);
@@ -31,21 +34,22 @@ export class GravityPhysics {
                 let dforceY = rawForce * Math.sin(angle);
                 forceX += dforceX;
                 forceY += dforceY;
-            })
+            }
             let accelX = forceX / curr.mass;
             let accelY = forceY / curr.mass;
 
             curr.vx += accelX * this.tickRate;
             curr.vy += accelY * this.tickRate;
-        })
+        }
 
-        this.bodies.map((curr) => {
+        for (let i = 0; i < this.bodies.length; i++) {
+            let curr = this.bodies[i];
             curr.loc.x += curr.vx * this.tickRate;
             curr.loc.y += curr.vy * this.tickRate;
 
             curr.sprite.centerX = curr.loc.x / this.metersPerPixel;
             curr.sprite.centerY = -curr.loc.y / this.metersPerPixel;
-        })
+        }
     }
 
     public distanceBetween(b1: Point, b2: Point): number {
