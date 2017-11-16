@@ -15,6 +15,7 @@ export default class Title extends Phaser.State {
     
     private mummyBody: Phaser.Physics.P2.Body;
     private planetBody: Phaser.Physics.P2.Body;
+    private collGroup: Phaser.Physics.P2.CollisionGroup;
 
     // This is any[] not string[] due to a limitation in TypeScript at the moment;
     // despite string enums working just fine, they are not officially supported so we trick the compiler into letting us do it anyway.
@@ -25,9 +26,10 @@ export default class Title extends Phaser.State {
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesBackgroundTemplate.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
 
-        this.game.physics.startSystem(Phaser.Physics.P2JS);
+        this.physics.startSystem(Phaser.Physics.P2JS);
+        this.collGroup = this.physics.p2.createCollisionGroup();
 
-        this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY+200, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
+        this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 200, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
         this.planetMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
         
 
@@ -37,14 +39,17 @@ export default class Title extends Phaser.State {
         p2.enableBody(this.planetMummy, false);
 
         this.mummyBody = this.moveableMummy.body;
-        this.mummyBody.data.mass = 10;
-        this.mummyBody.collides(2);
+        this.mummyBody.data.mass = 0.1;
+        this.mummyBody.setCollisionGroup(this.collGroup);
 
         this.planetBody = this.planetMummy.body;
         this.planetBody.dynamic = false;
         this.planetBody.data.mass = 10000;
-        this.planetBody.collides(1);
+        this.planetBody.setCollisionGroup(this.collGroup);
 
+        let push = (Math.sqrt(this.planetBody.data.mass) / Math.sqrt(p2.pxm(200))) / this.mummyBody.data.mass;
+
+        this.mummyBody.thrustRight(push);
 
         /*
         this.googleFontText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 100, 'Google Web Fonts', {
@@ -102,7 +107,7 @@ export default class Title extends Phaser.State {
     }
     public update(game: Phaser.Game) {
 
-        let rawForce = .01 * (this.mummyBody.data.mass * this.planetBody.data.mass) / this.distanceBetween(this.mummyBody, this.planetBody);
+        let rawForce = (this.mummyBody.data.mass * this.planetBody.data.mass) / this.distanceBetween(this.mummyBody, this.planetBody);
         let angle = this.getAngleTo(this.mummyBody, this.planetBody);
         
         let forceX = rawForce * Math.cos(angle);
@@ -110,6 +115,7 @@ export default class Title extends Phaser.State {
 
         this.mummyBody.thrustRight(forceX);
         this.mummyBody.thrust(-forceY);
+
     }
 
     private distanceBetween(b1: Phaser.Physics.P2.Body, b2: Phaser.Physics.P2.Body): number {
