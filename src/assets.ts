@@ -6,12 +6,95 @@ export namespace Images {
 
         static getPNG(): string { return require('assets/images/background_template.png'); }
     }
-    
-    export class ImagesPlanet1 {
+    export class SpritesheetsPlanet1 {
         static getName(): string { return 'planet1'; }
 
         static getPNG(): string { return require('assets/spritesheets/planet1.png'); }
-    
+    }
+    export class SpritesheetsPlanet10 {
+        static getName(): string { return 'planet10'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet10.png'); }
+    }
+    export class SpritesheetsPlanet11 {
+        static getName(): string { return 'planet11'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet11.png'); }
+    }
+    export class SpritesheetsPlanet12 {
+        static getName(): string { return 'planet12'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet12.png'); }
+    }
+    export class SpritesheetsPlanet13 {
+        static getName(): string { return 'planet13'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet13.png'); }
+    }
+    export class SpritesheetsPlanet14 {
+        static getName(): string { return 'planet14'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet14.png'); }
+    }
+    export class SpritesheetsPlanet15 {
+        static getName(): string { return 'planet15'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet15.png'); }
+    }
+    export class SpritesheetsPlanet16 {
+        static getName(): string { return 'planet16'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet16.png'); }
+    }
+    export class SpritesheetsPlanet17 {
+        static getName(): string { return 'planet17'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet17.png'); }
+    }
+    export class SpritesheetsPlanet18 {
+        static getName(): string { return 'planet18_0'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet18_0.png'); }
+    }
+    export class SpritesheetsPlanet19 {
+        static getName(): string { return 'planet19'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet19.png'); }
+    }
+    export class SpritesheetsPlanet2 {
+        static getName(): string { return 'planet2'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet2.png'); }
+    }
+    export class SpritesheetsPlanet20 {
+        static getName(): string { return 'planet20'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet20.png'); }
+    }
+    export class SpritesheetsPlanet3 {
+        static getName(): string { return 'planet3'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet3.png'); }
+    }
+    export class SpritesheetsPlanet4 {
+        static getName(): string { return 'planet4'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet4.png'); }
+    }
+    export class SpritesheetsPlanet5 {
+        static getName(): string { return 'planet5'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet5.png'); }
+    }
+    export class SpritesheetsPlanet6 {
+        static getName(): string { return 'planet6'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet6.png'); }
+    }
+    export class SpritesheetsPlanet7 {
+        static getName(): string { return 'planet7'; }
+
+        static getPNG(): string { return require('assets/spritesheets/planet7.png'); }
     }
 }
 
