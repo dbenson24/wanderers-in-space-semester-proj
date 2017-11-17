@@ -4,7 +4,22 @@ export namespace Images {
     export class ImagesBackgroundTemplate {
         static getName(): string { return 'background_template'; }
 
-        static getPNG(): string { return require('assets/images/background_template.png'); }
+        static getPNG(): string { return require('assets/images/space_background.png'); }
+    }
+    export class ImagesCyberpunkFarEdit3 {
+        static getName(): string { return 'cyberpunk-far-edit3'; }
+
+        static getPNG(): string { return require('assets/images/space_background.png'); }
+    }
+    export class ImagesCyberpunkMid {
+        static getName(): string { return 'cyberpunk-mid'; }
+
+        static getPNG(): string { return require('assets/images/ws_Space_station.jpg'); }
+    }
+    export class ImagesSpaceBackground {
+        static getName(): string { return 'space_background'; }
+
+        static getPNG(): string { return require('assets/images/space_background.png'); }
     }
     export class SpritesheetsPlanet1 {
         static getName(): string { return 'planet1'; }
@@ -95,6 +110,16 @@ export namespace Images {
         static getName(): string { return 'planet7'; }
 
         static getPNG(): string { return require('assets/spritesheets/planet7.png'); }
+    }
+    export class SpritesheetsSkip {
+        static getName(): string { return 'skip'; }
+
+        static getPNG(): string { return require('assets/spritesheets/skip.png'); }
+    }
+    export class SpritesheetsStartgame2 {
+        static getName(): string { return 'startgame2'; }
+
+        static getPNG(): string { return require('assets/spritesheets/startgame2.png'); }
     }
 }
 
