@@ -31,7 +31,7 @@ export default class gameStart extends Phaser.State {
         let frameRate = 1.0/60.0;
         this.gravityPhysics = new GravityPhysics(metersPerPixel, frameRate);
 
-        this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesBackgroundTemplate.getName());
+        this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesSpaceBackground.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
 
 

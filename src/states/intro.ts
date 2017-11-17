@@ -36,8 +36,8 @@ export default class Intro extends Phaser.State {
       'Have fun!'
     ]
 
-    const backImg = Images.ImagesCyberpunkFarEdit3.getName()
-    const midImg = Images.ImagesCyberpunkMid.getName()
+    const backImg = Images.ImagesSpaceBackground.getName()
+    const midImg = Images.ImagesWsSpaceStation.getName()
 
     this.bgBack = this.game.add.tileSprite(0,
       this.game.height - this.game.cache.getImage(backImg).height,

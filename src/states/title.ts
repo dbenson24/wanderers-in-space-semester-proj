@@ -10,7 +10,7 @@ export default class Title extends Phaser.State {
 
   public create(): void {
     this.game.stage.backgroundColor = '#071924'
-    const bgImg = Assets.Images.ImagesCyberpunkFarEdit3.getName()
+    const bgImg = Assets.Images.ImagesSpaceBackground.getName()
     this.backgroundTemplateSprite = this.game.add.tileSprite(0,
       this.game.height - this.game.cache.getImage(bgImg).height,
       this.game.width,
