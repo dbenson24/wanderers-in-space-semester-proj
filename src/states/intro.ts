@@ -25,7 +25,7 @@ export default class Intro extends Phaser.State {
     this.wordIndex = 0
 
     this.textContent = [
-      'This is a Kerbal Space Program simulation where players are able to assemble',
+      'This is an orbit simulation where players are able to assemble',
       'their own spaceship and launch it into the space. The program is mainly',
       'divided into two phases: assembling phase, and launching phase.',
       'In the assembling phase, the user has the options of configuring several different',
