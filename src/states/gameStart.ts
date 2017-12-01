@@ -21,9 +21,18 @@ export default class gameStart extends Phaser.State {
 
     private gravityPhysics: GravityPhysics;
 
+    private statsTable: Phaser.Text = null;
+    private hValue: Phaser.Text = null;
+    private vValue: Phaser.Text = null;
+    private locX: Phaser.Text = null;
+    private locY: Phaser.Text = null;
+
+
     // This is any[] not string[] due to a limitation in TypeScript at the moment;
     // despite string enums working just fine, they are not officially supported so we trick the compiler into letting us do it anyway.
     private sfxLaserSounds: any[] = null;
+
+    private movingBody: BasicGravityBody;
 
     public create(): void {
 
@@ -34,7 +43,6 @@ export default class gameStart extends Phaser.State {
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesSpaceBackground.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
 
-
         this.physics.startSystem(Phaser.Physics.P2JS);
         this.collGroup = this.physics.p2.createCollisionGroup();
 
@@ -44,27 +52,51 @@ export default class gameStart extends Phaser.State {
         this.planetMummy.scale.x = 0.2;
         this.planetMummy.scale.y = 0.2;
 
-        let movingBody = new BasicGravityBody(this.moveableMummy, metersPerPixel, 0.1);
+        this.movingBody = new BasicGravityBody(this.moveableMummy, metersPerPixel, 0.1);
         let stationaryBody = new BasicGravityBody(this.planetMummy, metersPerPixel, 1000000000.0);
 
-        this.gravityPhysics.addBody(movingBody);
+        this.gravityPhysics.addBody(this.movingBody);
         this.gravityPhysics.addBody(stationaryBody);
 
-        movingBody.vx = Math.sqrt(stationaryBody.mass / this.gravityPhysics.distanceBetween(movingBody.loc, stationaryBody.loc));
+        this.movingBody.vx = Math.sqrt(stationaryBody.mass / this.gravityPhysics.distanceBetween(this.movingBody.loc, stationaryBody.loc));
+
+
+        this.game.add.text(16, 16, 'Statistics Table', { font: '13px Anonymous Pro', fill: '#aea' })
+        this.game.add.text(16, 32, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        
+        this.game.add.text(16, 48, "   Spaceship Mass   : " + this.movingBody.mass.toFixed(2), { font: '13px Anonymous Pro', fill: '#aea' })
+        this.game.add.text(16, 48+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+
+        this.game.add.text(16, 48+16+16, "   Planet Mass         : " + stationaryBody.mass.toFixed(2), { font: '13px Anonymous Pro', fill: '#aea' })
+
+
+        this.hValue = this.game.add.text(16, 64+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        this.game.add.text(16, 80+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        
+        this.vValue = this.game.add.text(16, 96+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        this.game.add.text(16, 112+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        
+        this.locX = this.game.add.text(16, 128+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        this.game.add.text(16, 144+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        
+        this.text4 = this.game.add.text(16, 160+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
 
 
     }
     public update(game: Phaser.Game) {
         this.gravityPhysics.updateBodyPositions();
+        this.hValue.setText("   Horizontal Value : " + this.movingBody.vx.toFixed(2));
+        this.vValue.setText("   Vertical Value      : " + this.movingBody.vy.toFixed(2));
+        this.locX.setText("   loc - X                 : " + this.movingBody.loc.x.toFixed(2));
+        this.text4.setText("   loc - Y                 : " + this.movingBody.loc.y.toFixed(2));
     }
 
     private goNext(): void {
         this.game.state.start('intro')
-    } 
+    }
+
+
 }
-
-
-
 
 
 /********************************   Commented Out Code   *******************************/
