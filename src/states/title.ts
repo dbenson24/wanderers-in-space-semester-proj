@@ -20,7 +20,7 @@ export default class Title extends Phaser.State {
 
     // About text
     this.aboutInfo = [
-      '\"Kerbal Space Orbital Simulation\"',
+      '\"Kerbal Space Orbital Simulation Game\"',
       '',
       ' By: Derek Benson, Ge Gao, Robert Goodfellow',
       '',
@@ -33,12 +33,16 @@ export default class Title extends Phaser.State {
       this.game.add.text(16, startY + offset, this.aboutInfo[i], { font: '13px Anonymous Pro', fill: '#aea' })
     }
 
-
     this.startKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
 
     this.backgroundTemplateSprite.inputEnabled = true;
 
-    this.game.add.button(this.game.world.centerX - 100, this.game.world.centerY + 50, Assets.Images.SpritesheetsStartgame2.getName(), this.goNext, this, 2, 1, 0)
+    this.game.add.button(this.game.world.centerX - 100, 
+                         this.game.world.centerY + 50,
+                         Assets.Images.SpritesheetsStartgame2.getName(),
+                         this.goNext, this, 2, 1, 0);
+
+
     this.game.camera.flash(0x000000, 1000)
   }
 
@@ -51,6 +55,7 @@ export default class Title extends Phaser.State {
   private goNext(): void {
     this.game.state.start('intro')
   }
+
 }
 
 

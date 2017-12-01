@@ -116,6 +116,11 @@ export namespace Images {
 
         static getPNG(): string { return require('assets/spritesheets/startgame2.png'); }
     }
+    export class SpritesheetsTestButton {
+        static getName(): string { return 'testButton'; }
+
+        static getPNG(): string { return require('assets/spritesheets/testButton.png'); }
+    }
 }
 
 export namespace Spritesheets {
