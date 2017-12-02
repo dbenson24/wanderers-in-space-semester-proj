@@ -45,6 +45,8 @@ export default class gameStart extends Phaser.State {
 
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesSpaceBackground.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
+        this.backgroundTemplateSprite.fixedToCamera = true;
+        this.backgroundTemplateSprite.cameraOffset.set(this.game.world.centerX, this.game.world.centerY);
         this.game.world.setBounds(-3000, 3000, 6000, 6000);
 
         /*
