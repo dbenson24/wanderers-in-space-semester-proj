@@ -1,15 +1,15 @@
 /* AUTO GENERATED FILE. DO NOT MODIFY. YOU WILL LOSE YOUR CHANGES ON BUILD. */
 
 export namespace Images {
-    export class ImagesBackgroundTemplate {
-        static getName(): string { return 'background_template'; }
-
-        static getPNG(): string { return require('assets/images/background_template.png'); }
-    }
     export class ImagesCyberpunkFarEdit3 {
         static getName(): string { return 'cyberpunk-far-edit3'; }
 
         static getPNG(): string { return require('assets/images/cyberpunk-far-edit3.png'); }
+    }
+    export class ImagesShip1 {
+        static getName(): string { return 'ship1'; }
+
+        static getPNG(): string { return require('assets/images/ship1.png'); }
     }
     export class ImagesSpaceBackground {
         static getName(): string { return 'space_background'; }

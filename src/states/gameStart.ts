@@ -43,12 +43,20 @@ export default class gameStart extends Phaser.State {
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesSpaceBackground.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
 
+        PIXI.Sprite.defaultAnchor.x = 0.5;
+        PIXI.Sprite.defaultAnchor.y = 0.5;
+
         this.physics.startSystem(Phaser.Physics.P2JS);
         this.collGroup = this.physics.p2.createCollisionGroup();
 
         this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 200, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
         this.planetMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.SpritesheetsPlanet18.getName());
         
+
+        let ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 50, Assets.Images.ImagesShip1.getName());
+        ship.scale.x = 0.2;
+        ship.scale.y = 0.2;
+
         this.planetMummy.scale.x = 0.2;
         this.planetMummy.scale.y = 0.2;
 
