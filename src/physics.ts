@@ -18,14 +18,19 @@ export class GravityPhysics {
     }
 
     public updateBodyPositions() {
-
         for (let i = 0; i < this.bodies.length; i++) {
             let curr = this.bodies[i];
             let forceX = 0;
             let forceY = 0;
+            if (curr.engineOn) {
+                let dforceY = curr.engineForce * Math.cos(curr.sprite.rotation);
+                let dforceX = curr.engineForce * Math.sin(curr.sprite.rotation);
+                forceX += dforceX;
+                forceY += dforceY;
+            }
             for (let j = 0; j < this.bodies.length; j++) {
                 let target = this.bodies[j];
-                if (target == curr) {
+                if (target === curr) {
                     continue;
                 }
                 let rawForce = (curr.mass * target.mass) / Math.pow(this.distanceBetween(curr.loc, target.loc), 2);
@@ -61,7 +66,7 @@ export class GravityPhysics {
     public getAngleTo(source: Point, target: Point): number {
         return Math.atan2(target.y - source.y, target.x - source.x);
     }
-};
+}
 
 export type Meters = number;
 export type MetersPerSecond = number;
@@ -75,9 +80,11 @@ export interface Point {
 export interface GravityBody {
     loc: Point;
     sprite: Phaser.Sprite;
-    mass: number;
+    mass: Kilogram;
     vx: MetersPerSecond;
     vy: MetersPerSecond;
+    engineForce: number;
+    engineOn: boolean;
 }
 
 export class BasicGravityBody implements GravityBody {
@@ -86,8 +93,10 @@ export class BasicGravityBody implements GravityBody {
     public mass: Kilogram;
     public vx: MetersPerSecond;
     public vy: MetersPerSecond;
+    public engineForce: number;
+    public engineOn: boolean;
 
-    constructor(sprite: Phaser.Sprite, metersPerPixel: number, mass: Kilogram) {
+    constructor(sprite: Phaser.Sprite, metersPerPixel: number, mass: Kilogram, engineForce: number = 0) {
         let x = sprite.centerX * metersPerPixel;
         let y = sprite.centerY * metersPerPixel * -1.0;
         this.loc = {
@@ -98,5 +107,7 @@ export class BasicGravityBody implements GravityBody {
         this.mass = mass;
         this.vx = 0;
         this.vy = 0;
+        this.engineForce = engineForce;
+        this.engineOn = false;
     }
 }

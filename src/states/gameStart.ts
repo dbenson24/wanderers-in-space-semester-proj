@@ -14,6 +14,7 @@ export default class gameStart extends Phaser.State {
     private sfxAudiosprite: Phaser.AudioSprite = null;
     private moveableMummy: Phaser.Sprite = null;
     private planetMummy: Phaser.Sprite = null;
+    private ship: Phaser.Sprite = null;
     
     private mummyBody: Phaser.Physics.P2.Body;
     private planetBody: Phaser.Physics.P2.Body;
@@ -26,6 +27,7 @@ export default class gameStart extends Phaser.State {
     private vValue: Phaser.Text = null;
     private locX: Phaser.Text = null;
     private locY: Phaser.Text = null;
+    private text4: Phaser.Text = null;
 
 
     // This is any[] not string[] due to a limitation in TypeScript at the moment;
@@ -33,6 +35,7 @@ export default class gameStart extends Phaser.State {
     private sfxLaserSounds: any[] = null;
 
     private movingBody: BasicGravityBody;
+    private shipBody: BasicGravityBody;
 
     public create(): void {
 
@@ -43,31 +46,45 @@ export default class gameStart extends Phaser.State {
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesSpaceBackground.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
 
+        /*
         PIXI.Sprite.defaultAnchor.x = 0.5;
         PIXI.Sprite.defaultAnchor.y = 0.5;
+        */
 
         this.physics.startSystem(Phaser.Physics.P2JS);
         this.collGroup = this.physics.p2.createCollisionGroup();
 
         this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 200, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
         this.planetMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.SpritesheetsPlanet18.getName());
+        this.moveableMummy.anchor.x = 0.5;
+        this.moveableMummy.anchor.y = 0.5;
+        
+        this.planetMummy.anchor.x = 0.5;
+        this.planetMummy.anchor.y = 0.5;
+        
         
 
         let ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 50, Assets.Images.ImagesShip1.getName());
         ship.scale.x = 0.2;
         ship.scale.y = 0.2;
+        ship.anchor.x = 0.5;
+        ship.anchor.y = 0.5;
+        this.ship = ship;
 
         this.planetMummy.scale.x = 0.2;
         this.planetMummy.scale.y = 0.2;
 
-        this.movingBody = new BasicGravityBody(this.moveableMummy, metersPerPixel, 0.1);
+        this.movingBody = new BasicGravityBody(this.moveableMummy, metersPerPixel,  10000000.0);
         let stationaryBody = new BasicGravityBody(this.planetMummy, metersPerPixel, 1000000000.0);
+
+        this.shipBody = new BasicGravityBody(this.ship, metersPerPixel, 20.0, 5000.0);
 
         this.gravityPhysics.addBody(this.movingBody);
         this.gravityPhysics.addBody(stationaryBody);
+        this.gravityPhysics.addBody(this.shipBody);
 
         this.movingBody.vx = Math.sqrt(stationaryBody.mass / this.gravityPhysics.distanceBetween(this.movingBody.loc, stationaryBody.loc));
-
+        this.shipBody.vx = Math.sqrt(stationaryBody.mass / this.gravityPhysics.distanceBetween(this.shipBody.loc, stationaryBody.loc));
 
         this.game.add.text(16, 16, 'Statistics Table', { font: '13px Anonymous Pro', fill: '#aea' })
         this.game.add.text(16, 32, '', { font: '13px Anonymous Pro', fill: '#aea' })
@@ -89,14 +106,30 @@ export default class gameStart extends Phaser.State {
         
         this.text4 = this.game.add.text(16, 160+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
 
+        console.log("rotation: " + ship.rotation);
 
     }
     public update(game: Phaser.Game) {
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
+            this.ship.rotation -= Math.PI / 180;
+        }
+
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.D)) {
+            this.ship.rotation += Math.PI / 180;
+        }
+
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
+            this.shipBody.engineOn = true;
+        }
         this.gravityPhysics.updateBodyPositions();
+        this.shipBody.engineOn = false;
         this.hValue.setText("   Horizontal Value : " + this.movingBody.vx.toFixed(2));
         this.vValue.setText("   Vertical Value      : " + this.movingBody.vy.toFixed(2));
         this.locX.setText("   loc - X                 : " + this.movingBody.loc.x.toFixed(2));
         this.text4.setText("   loc - Y                 : " + this.movingBody.loc.y.toFixed(2));
+
+
+
     }
 
     private goNext(): void {
