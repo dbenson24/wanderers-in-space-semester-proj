@@ -45,6 +45,7 @@ export default class gameStart extends Phaser.State {
 
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesSpaceBackground.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
+        this.game.world.setBounds(-3000, 3000, 6000, 6000);
 
         /*
         PIXI.Sprite.defaultAnchor.x = 0.5;
@@ -56,23 +57,20 @@ export default class gameStart extends Phaser.State {
 
         this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 200, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
         this.planetMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.SpritesheetsPlanet18.getName());
-        this.moveableMummy.anchor.x = 0.5;
-        this.moveableMummy.anchor.y = 0.5;
+        this.moveableMummy.anchor.setTo(0.5);
         
-        this.planetMummy.anchor.x = 0.5;
-        this.planetMummy.anchor.y = 0.5;
+        this.planetMummy.anchor.setTo(0.5);
         
         
 
         let ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 50, Assets.Images.ImagesShip1.getName());
-        ship.scale.x = 0.2;
-        ship.scale.y = 0.2;
-        ship.anchor.x = 0.5;
-        ship.anchor.y = 0.5;
+        ship.scale.setTo(0.2);
+        ship.anchor.setTo(0.5);
         this.ship = ship;
 
-        this.planetMummy.scale.x = 0.2;
-        this.planetMummy.scale.y = 0.2;
+        this.game.camera.follow(ship, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+
+        this.planetMummy.scale.setTo(0.2);
 
         this.movingBody = new BasicGravityBody(this.moveableMummy, metersPerPixel,  10000000.0);
         let stationaryBody = new BasicGravityBody(this.planetMummy, metersPerPixel, 1000000000.0);
@@ -86,25 +84,39 @@ export default class gameStart extends Phaser.State {
         this.movingBody.vx = Math.sqrt(stationaryBody.mass / this.gravityPhysics.distanceBetween(this.movingBody.loc, stationaryBody.loc));
         this.shipBody.vx = Math.sqrt(stationaryBody.mass / this.gravityPhysics.distanceBetween(this.shipBody.loc, stationaryBody.loc));
 
-        this.game.add.text(16, 16, 'Statistics Table', { font: '13px Anonymous Pro', fill: '#aea' })
-        this.game.add.text(16, 32, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        let t = this.game.add.text(16, 16, 'Statistics Table', { font: '13px Anonymous Pro', fill: '#aea' })
+        t.fixedToCamera = true;
+        t.cameraOffset.set(16, 16);
+        // this.game.add.text(16, 32, '', { font: '13px Anonymous Pro', fill: '#aea' })
         
-        this.game.add.text(16, 48, "   Spaceship Mass   : " + this.movingBody.mass.toFixed(2), { font: '13px Anonymous Pro', fill: '#aea' })
-        this.game.add.text(16, 48+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        let sm = this.game.add.text(16, 48, "   Spaceship Mass   : " + this.movingBody.mass.toFixed(2), { font: '13px Anonymous Pro', fill: '#aea' })
+        sm.fixedToCamera = true;
+        sm.cameraOffset.set(16, 48);
+        //this.game.add.text(16, 48+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
 
-        this.game.add.text(16, 48+16+16, "   Planet Mass         : " + stationaryBody.mass.toFixed(2), { font: '13px Anonymous Pro', fill: '#aea' })
+        let pm = this.game.add.text(16, 48+16+16, "   Planet Mass         : " + stationaryBody.mass.toFixed(2), { font: '13px Anonymous Pro', fill: '#aea' })
+        pm.fixedToCamera = true;
+        pm.cameraOffset.set(16, 48+16+16);
 
+        this.hValue = this.game.add.text(16, 64+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.hValue.fixedToCamera = true;
+        this.hValue.cameraOffset.set(16, 64+16+16+16);
 
-        this.hValue = this.game.add.text(16, 64+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
-        this.game.add.text(16, 80+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        this.game.add.text(16, 80+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' });
         
-        this.vValue = this.game.add.text(16, 96+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
-        this.game.add.text(16, 112+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        this.vValue = this.game.add.text(16, 96+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.vValue.fixedToCamera = true;
+        this.vValue.cameraOffset.set(16, 96+16+16+16);
+        //this.game.add.text(16, 112+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
         
-        this.locX = this.game.add.text(16, 128+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
-        this.game.add.text(16, 144+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        this.locX = this.game.add.text(16, 128+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.locX.fixedToCamera = true;
+        this.locX.cameraOffset.set(16, 128+16+16+16);
+        //this.game.add.text(16, 144+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
         
-        this.text4 = this.game.add.text(16, 160+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        this.text4 = this.game.add.text(16, 160+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.text4.fixedToCamera = true;
+        this.text4.cameraOffset.set(16, 160+16+16+16);
 
         console.log("rotation: " + ship.rotation);
 
