@@ -141,16 +141,32 @@ export default class gameStart extends Phaser.State {
         this.vValue.setText("   Vertical Value      : " + this.movingBody.vy.toFixed(2));
         this.locX.setText("   loc - X                 : " + this.movingBody.loc.x.toFixed(2));
         this.text4.setText("   loc - Y                 : " + this.movingBody.loc.y.toFixed(2));
-
-
-
+        for (let i = 0; i < this.gravityPhysics.bodies.length; i++) {
+            if (Object.is(this.shipBody, this.gravityPhysics.bodies[i])) {
+                continue;
+            }
+            if (this.shipBody.collisionOccured(this.gravityPhysics.bodies[i])) { 
+                if (this.shipBody.collisionSurvivable(this.gravityPhysics.bodies[i])) { 
+                    // TODO: Change to win condition
+                    this.win();
+                }
+                else { 
+                    // TODO: Change to loss condition
+                    this.fail();
+                }
+            }
+        } 
     }
 
+    private fail(): void { 
+        this.game.state.start('lose');
+    } 
+    private win(): void { 
+        this.game.state.start('win');
+    } 
     private goNext(): void {
-        this.game.state.start('intro')
+        this.game.state.start('intro');
     }
-
-
 }
 
 

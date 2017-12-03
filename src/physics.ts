@@ -4,8 +4,7 @@ import { Physics, scaleModes } from 'phaser-ce';
 export class GravityPhysics {
     public metersPerPixel: number;
     public tickRate: number;
-
-    private bodies: GravityBody[];
+    public bodies: GravityBody[];
 
     constructor(metersPerPixel: number, tickRate: number) {
         this.metersPerPixel = metersPerPixel;
@@ -85,6 +84,7 @@ export interface GravityBody {
     vy: MetersPerSecond;
     engineForce: number;
     engineOn: boolean;
+    radius: Meters;
 }
 
 export class BasicGravityBody implements GravityBody {
@@ -95,6 +95,7 @@ export class BasicGravityBody implements GravityBody {
     public vy: MetersPerSecond;
     public engineForce: number;
     public engineOn: boolean;
+    public radius: Meters;
 
     constructor(sprite: Phaser.Sprite, metersPerPixel: number, mass: Kilogram, engineForce: number = 0) {
         let x = sprite.centerX * metersPerPixel;
@@ -109,5 +110,20 @@ export class BasicGravityBody implements GravityBody {
         this.vy = 0;
         this.engineForce = engineForce;
         this.engineOn = false;
+        this.radius = ((sprite.width/2) * metersPerPixel);
+    }
+
+    public collisionOccured(otherBody: GravityBody): boolean { 
+        let dx = (this.loc.x - otherBody.loc.x);
+        let dy = (this.loc.y - otherBody.loc.y);
+        return Math.sqrt((dx * dx) + (dy * dy)) < (this.radius + otherBody.radius);
+    }
+
+    public collisionSurvivable(otherBody: GravityBody): boolean {
+        let dvx = (this.vx - otherBody.vx);
+        let dvy = (this.vy - otherBody.vy);
+        let relv = Math.sqrt((dvx * dvx) + (dvy * dvy));
+        //5.0 Meters per second is the impact survivability limit.
+        return relv < 5.0;
     }
 }

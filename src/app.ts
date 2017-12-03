@@ -9,6 +9,8 @@ import Preloader from './states/preloader';
 import Title from './states/title';
 import Intro from './states/intro'
 import GameStart from './states/gameStart';
+import Win from './states/win';
+import Lose from './states/lose';
 import * as Utils from './utils/utils';
 import * as Assets from './assets';
 
@@ -21,6 +23,8 @@ class App extends Phaser.Game {
         this.state.add('title', Title);
         this.state.add('intro', Intro);
         this.state.add('gameStart', GameStart);
+        this.state.add('win', Win);
+        this.state.add('lose', Lose);
 
         this.state.start('boot');
     }

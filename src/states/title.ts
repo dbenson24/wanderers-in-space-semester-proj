@@ -20,8 +20,7 @@ export default class Title extends Phaser.State {
 
     // About text
     this.aboutInfo = [
-      '\"Kerbal Space Orbital Simulation Game\"',
-      '\"Orbital Simulation\"',
+      '\"Orbital Simulation Game\"',
       '',
       ' By: Derek Benson, Ge Gao, Robert Goodfellow',
       '',
