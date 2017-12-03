@@ -13,12 +13,11 @@ export default class gameStart extends Phaser.State {
     private blurYFilter: Phaser.Filter.BlurY = null;
     private sfxAudiosprite: Phaser.AudioSprite = null;
     private moveableMummy: Phaser.Sprite = null;
-    private planetMummy: Phaser.Sprite = null;
+    private planet: Phaser.Sprite = null;
     private ship: Phaser.Sprite = null;
     
     private mummyBody: Phaser.Physics.P2.Body;
     private planetBody: Phaser.Physics.P2.Body;
-    private collGroup: Phaser.Physics.P2.CollisionGroup;
 
     private gravityPhysics: GravityPhysics;
 
@@ -55,13 +54,11 @@ export default class gameStart extends Phaser.State {
         */
 
         this.physics.startSystem(Phaser.Physics.P2JS);
-        this.collGroup = this.physics.p2.createCollisionGroup();
 
         this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 200, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
-        this.planetMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.SpritesheetsPlanet18.getName());
+        this.planet = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.SpritesheetsPlanet18.getName());
         this.moveableMummy.anchor.setTo(0.5);
-        
-        this.planetMummy.anchor.setTo(0.5);
+        this.planet.anchor.setTo(0.5);
         
         
 
@@ -72,10 +69,10 @@ export default class gameStart extends Phaser.State {
 
         this.game.camera.follow(ship, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
-        this.planetMummy.scale.setTo(0.2);
+        this.planet.scale.setTo(0.2);
 
         this.movingBody = new BasicGravityBody(this.moveableMummy, metersPerPixel,  10000000.0);
-        let stationaryBody = new BasicGravityBody(this.planetMummy, metersPerPixel, 1000000000.0);
+        let stationaryBody = new BasicGravityBody(this.planet, metersPerPixel, 1000000000.0);
 
         this.shipBody = new BasicGravityBody(this.ship, metersPerPixel, 20.0, 5000.0);
 
@@ -148,11 +145,11 @@ export default class gameStart extends Phaser.State {
             if (this.shipBody.collisionOccured(this.gravityPhysics.bodies[i])) { 
                 if (this.shipBody.collisionSurvivable(this.gravityPhysics.bodies[i])) { 
                     // TODO: Change to win condition
-                    this.win();
+                    this.goNext();
                 }
                 else { 
                     // TODO: Change to loss condition
-                    this.fail();
+                    this.goNext();
                 }
             }
         } 
@@ -165,7 +162,7 @@ export default class gameStart extends Phaser.State {
         this.game.state.start('win');
     } 
     private goNext(): void {
-        this.game.state.start('intro');
+        this.game.state.start('title');
     }
 }
 
