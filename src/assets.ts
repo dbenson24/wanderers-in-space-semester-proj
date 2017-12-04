@@ -1,11 +1,6 @@
 /* AUTO GENERATED FILE. DO NOT MODIFY. YOU WILL LOSE YOUR CHANGES ON BUILD. */
 
 export namespace Images {
-    export class ImagesBackgroundTemplate {
-        static getName(): string { return 'background_template'; }
-
-        static getPNG(): string { return require('assets/images/background_template.png'); }
-    }
     export class ImagesCyberpunkFarEdit3 {
         static getName(): string { return 'cyberpunk-far-edit3'; }
 
@@ -15,6 +10,11 @@ export namespace Images {
         static getName(): string { return 'ship1'; }
 
         static getPNG(): string { return require('assets/images/ship1.png'); }
+    }
+    export class ImagesShip2 {
+        static getName(): string { return 'ship2'; }
+
+        static getPNG(): string { return require('assets/images/ship2.png'); }
     }
     export class ImagesSpaceBackground {
         static getName(): string { return 'space_background'; }

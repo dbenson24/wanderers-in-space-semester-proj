@@ -66,7 +66,7 @@ export default class Intro extends Phaser.State {
     }
   }
   private goNext(): void {
-    this.game.state.start('gameStart')
+    this.game.state.start('gameStart');
   }
 
   private nextLine() {

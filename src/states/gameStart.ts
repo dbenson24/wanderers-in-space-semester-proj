@@ -42,27 +42,31 @@ export default class gameStart extends Phaser.State {
         let frameRate = 1.0/60.0;
         this.gravityPhysics = new GravityPhysics(metersPerPixel, frameRate);
 
+        console.log("Starting Game!!!")
+
+        console.log('this.game.world.centerX: ' + this.game.world.centerX);
+        
+
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesSpaceBackground.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
         this.backgroundTemplateSprite.fixedToCamera = true;
         this.backgroundTemplateSprite.cameraOffset.set(this.game.world.centerX, this.game.world.centerY);
         this.game.world.setBounds(-3000, 3000, 6000, 6000);
 
-        /*
-        PIXI.Sprite.defaultAnchor.x = 0.5;
-        PIXI.Sprite.defaultAnchor.y = 0.5;
-        */
+        
+        // PIXI.Sprite.defaultAnchor.x = 0.5;
+        // PIXI.Sprite.defaultAnchor.y = 0.5;
+        
 
         this.physics.startSystem(Phaser.Physics.P2JS);
 
-        this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 200, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
+        this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 150, Assets.Images.SpritesheetsPlanet6.getName());
         this.planet = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.SpritesheetsPlanet18.getName());
         this.moveableMummy.anchor.setTo(0.5);
+        this.moveableMummy.scale.setTo(0.1);
         this.planet.anchor.setTo(0.5);
-        
-        
 
-        let ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 50, Assets.Images.ImagesShip1.getName());
+        let ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 80, Assets.Images.ImagesShip1.getName());
         ship.scale.setTo(0.2);
         ship.anchor.setTo(0.5);
         this.ship = ship;
@@ -86,41 +90,38 @@ export default class gameStart extends Phaser.State {
         let t = this.game.add.text(16, 16, 'Statistics Table', { font: '13px Anonymous Pro', fill: '#aea' })
         t.fixedToCamera = true;
         t.cameraOffset.set(16, 16);
-        // this.game.add.text(16, 32, '', { font: '13px Anonymous Pro', fill: '#aea' })
         
         let sm = this.game.add.text(16, 48, "   Spaceship Mass   : " + this.movingBody.mass.toFixed(2), { font: '13px Anonymous Pro', fill: '#aea' })
         sm.fixedToCamera = true;
         sm.cameraOffset.set(16, 48);
-        //this.game.add.text(16, 48+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
 
-        let pm = this.game.add.text(16, 48+16+16, "   Planet Mass         : " + stationaryBody.mass.toFixed(2), { font: '13px Anonymous Pro', fill: '#aea' })
+        let pm = this.game.add.text(16, 80, "   Planet Mass         : " + stationaryBody.mass.toFixed(2), { font: '13px Anonymous Pro', fill: '#aea' })
         pm.fixedToCamera = true;
-        pm.cameraOffset.set(16, 48+16+16);
+        pm.cameraOffset.set(16, 80);
 
-        this.hValue = this.game.add.text(16, 64+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.hValue = this.game.add.text(16, 112, '', { font: '13px Anonymous Pro', fill: '#aea' });
         this.hValue.fixedToCamera = true;
-        this.hValue.cameraOffset.set(16, 64+16+16+16);
+        this.hValue.cameraOffset.set(16, 112);
 
-        this.game.add.text(16, 80+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.game.add.text(16, 128, '', { font: '13px Anonymous Pro', fill: '#aea' });
         
-        this.vValue = this.game.add.text(16, 96+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.vValue = this.game.add.text(16, 144, '', { font: '13px Anonymous Pro', fill: '#aea' });
         this.vValue.fixedToCamera = true;
-        this.vValue.cameraOffset.set(16, 96+16+16+16);
-        //this.game.add.text(16, 112+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        this.vValue.cameraOffset.set(16, 144);
         
-        this.locX = this.game.add.text(16, 128+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.locX = this.game.add.text(16, 176, '', { font: '13px Anonymous Pro', fill: '#aea' });
         this.locX.fixedToCamera = true;
-        this.locX.cameraOffset.set(16, 128+16+16+16);
-        //this.game.add.text(16, 144+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' })
+        this.locX.cameraOffset.set(16, 176);
         
-        this.text4 = this.game.add.text(16, 160+16+16+16, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.text4 = this.game.add.text(16, 208, '', { font: '13px Anonymous Pro', fill: '#aea' });
         this.text4.fixedToCamera = true;
-        this.text4.cameraOffset.set(16, 160+16+16+16);
+        this.text4.cameraOffset.set(16, 208);
 
         console.log("rotation: " + ship.rotation);
 
     }
     public update(game: Phaser.Game) {
+
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
             this.ship.rotation -= Math.PI / 180;
         }
@@ -131,7 +132,9 @@ export default class gameStart extends Phaser.State {
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
             this.shipBody.engineOn = true;
+            console.log("Engine Fired !!!!!!");
         }
+
         this.gravityPhysics.updateBodyPositions();
         this.shipBody.engineOn = false;
         this.hValue.setText("   Horizontal Value : " + this.movingBody.vx.toFixed(2));
@@ -145,9 +148,12 @@ export default class gameStart extends Phaser.State {
             if (this.shipBody.collisionOccured(this.gravityPhysics.bodies[i])) { 
                 if (this.shipBody.collisionSurvivable(this.gravityPhysics.bodies[i])) { 
                     // TODO: Change to win condition
+                    console.log('WIN!!!!')
                     this.goNext();
+
                 }
                 else { 
+                    console.log('LOST!!!!')
                     // TODO: Change to loss condition
                     this.goNext();
                 }
@@ -155,94 +161,15 @@ export default class gameStart extends Phaser.State {
         } 
     }
 
+    private goNext(): void {
+        this.game.state.start('gameStart');
+    }
+
     private fail(): void { 
         this.game.state.start('lose');
     } 
+
     private win(): void { 
         this.game.state.start('win');
     } 
-    private goNext(): void {
-        this.game.state.start('title');
-    }
 }
-
-
-/********************************   Commented Out Code   *******************************/
-
-/*
-let p2 = this.game.physics.p2;
-
-p2.enableBody(this.moveableMummy, true);
-p2.enableBody(this.planetMummy, false);
-
-this.mummyBody = this.moveableMummy.body;
-this.mummyBody.data.mass = 0.1;
-this.mummyBody.setCollisionGroup(this.collGroup);
-
-this.planetBody = this.planetMummy.body;
-this.planetBody.dynamic = false;
-this.planetBody.data.mass = 10000;
-this.planetBody.setCollisionGroup(this.collGroup);
-
-let push = (Math.sqrt(this.planetBody.data.mass) / Math.sqrt(p2.pxm(200))) / this.mummyBody.data.mass;
-
-this.mummyBody.thrustRight(p2.mpx(push));
-*/
-
-
-
-
-
-/*
-this.googleFontText = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 100, 'Google Web Fonts', {
-    font: '50px ' + Assets.GoogleWebFonts.Barrio
-});
-this.googleFontText.anchor.setTo(0.5);
-
-this.localFontText = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Local Fonts + Shaders .frag (Pixelate here)!', {
-    font: '30px ' + Assets.CustomWebFonts.Fonts2DumbWebfont.getFamily()
-});
-this.localFontText.anchor.setTo(0.5);
-
-this.pixelateShader = new Phaser.Filter(this.game, null, this.game.cache.getShader(Assets.Shaders.ShadersPixelate.getName()));
-this.localFontText.filters = [this.pixelateShader];
-
-this.bitmapFontText = this.game.add.bitmapText(this.game.world.centerX, this.game.world.centerY + 100, Assets.BitmapFonts.FontsFontFnt.getName(), 'Bitmap Fonts + Filters .js (Blur here)!', 40);
-this.bitmapFontText.anchor.setTo(0.5);
-
-this.blurXFilter = this.game.add.filter(Assets.Scripts.ScriptsBlurX.getName()) as Phaser.Filter.BlurX;
-this.blurXFilter.blur = 8;
-this.blurYFilter = this.game.add.filter(Assets.Scripts.ScriptsBlurY.getName()) as Phaser.Filter.BlurY;
-this.blurYFilter.blur = 2;
-
-this.bitmapFontText.filters = [this.blurXFilter, this.blurYFilter];
-
-this.mummySpritesheet = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 175, Assets.Spritesheets.SpritesheetsMetalslugMummy374518.getName());
-this.mummySpritesheet.animations.add('walk');
-this.mummySpritesheet.animations.play('walk', 30, true);
-
-this.sfxAudiosprite = this.game.add.audioSprite(Assets.Audiosprites.AudiospritesSfx.getName());
-
-// This is an example of how you can lessen the verbosity
-let availableSFX = Assets.Audiosprites.AudiospritesSfx.Sprites;
-this.sfxLaserSounds = [
-    availableSFX.Laser1,
-    availableSFX.Laser2,
-    availableSFX.Laser3,
-    availableSFX.Laser4,
-    availableSFX.Laser5,
-    availableSFX.Laser6,
-    availableSFX.Laser7,
-    availableSFX.Laser8,
-    availableSFX.Laser9
-];
-
-this.game.sound.play(Assets.Audio.AudioMusic.getName(), 0.2, true);
-
-this.backgroundTemplateSprite.inputEnabled = true;
-this.backgroundTemplateSprite.events.onInputDown.add(() => {
-    this.sfxAudiosprite.play(Phaser.ArrayUtils.getRandomItem(this.sfxLaserSounds));
-});
-
-this.game.camera.flash(0x000000, 1000);
-*/
