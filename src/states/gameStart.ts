@@ -45,7 +45,7 @@ export default class gameStart extends Phaser.State {
         console.log("Starting Game!!!")
 
         console.log('this.game.world.centerX: ' + this.game.world.centerX);
-        
+
 
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesSpaceBackground.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
@@ -59,6 +59,13 @@ export default class gameStart extends Phaser.State {
         
 
         this.physics.startSystem(Phaser.Physics.P2JS);
+
+        var zoomFactor = 0.5;
+        var cameraFocusX = 100;
+        var cameraFocusY = 200;
+
+        this.game.world.scale.setTo(zoomFactor);
+        this.game.camera.focusOnXY(cameraFocusX * this.game.world.scale.x, cameraFocuzY * this.game.world.scale.y);
 
         this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 150, Assets.Images.SpritesheetsPlanet6.getName());
         this.planet = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.SpritesheetsPlanet18.getName());
@@ -131,6 +138,7 @@ export default class gameStart extends Phaser.State {
         }
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
+            
             this.shipBody.engineOn = true;
             console.log("Engine Fired !!!!!!");
         }
