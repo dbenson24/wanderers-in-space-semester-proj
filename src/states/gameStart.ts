@@ -165,15 +165,13 @@ export default class gameStart extends Phaser.State {
         } 
     }
 
-    private goNext(): void {
-        this.game.state.start('gameStart');
-    }
-
     private fail(): void { 
         this.game.state.start('lose');
     } 
-
     private win(): void { 
         this.game.state.start('win');
     } 
+    private goNext(): void {
+        this.game.state.start('gameStart');
+    }
 }
