@@ -87,37 +87,41 @@ export default class gameStart extends Phaser.State {
         this.movingBody.vx = Math.sqrt(stationaryBody.mass / this.gravityPhysics.distanceBetween(this.movingBody.loc, stationaryBody.loc));
         this.shipBody.vx = Math.sqrt(stationaryBody.mass / this.gravityPhysics.distanceBetween(this.shipBody.loc, stationaryBody.loc));
 
-        let t = this.game.add.text(16, 16, 'Statistics Table', { font: '13px Anonymous Pro', fill: '#aea' })
+        let fontStyle = { font: '13px Anonymous Pro', fill: '#aea' };
+
+        let t = this.game.add.text(16, 16, 'Statistics Table', fontStyle);
         t.fixedToCamera = true;
         t.cameraOffset.set(16, 16);
+        // this.game.add.text(16, 32, '', fontStyle)
         
-        let sm = this.game.add.text(16, 48, "   Spaceship Mass   : " + this.movingBody.mass.toFixed(2), { font: '13px Anonymous Pro', fill: '#aea' })
+        let sm = this.game.add.text(16, 48, "   Spaceship Mass   : " + this.movingBody.mass.toFixed(2), fontStyle);
         sm.fixedToCamera = true;
         sm.cameraOffset.set(16, 48);
+        //this.game.add.text(16, 48+16, '', fontStyle)
 
-        let pm = this.game.add.text(16, 80, "   Planet Mass         : " + stationaryBody.mass.toFixed(2), { font: '13px Anonymous Pro', fill: '#aea' })
+        let pm = this.game.add.text(16, 48+16+16, "   Planet Mass         : " + stationaryBody.mass.toFixed(2), fontStyle);
         pm.fixedToCamera = true;
         pm.cameraOffset.set(16, 80);
 
-        this.hValue = this.game.add.text(16, 112, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.hValue = this.game.add.text(16, 64+16+16+16, '', fontStyle);
         this.hValue.fixedToCamera = true;
         this.hValue.cameraOffset.set(16, 112);
 
-        this.game.add.text(16, 128, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.game.add.text(16, 80+16+16+16, '', fontStyle);
         
-        this.vValue = this.game.add.text(16, 144, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.vValue = this.game.add.text(16, 96+16+16+16, '', fontStyle);
         this.vValue.fixedToCamera = true;
-        this.vValue.cameraOffset.set(16, 144);
+        this.vValue.cameraOffset.set(16, 96+16+16+16);
+        //this.game.add.text(16, 112+16+16+16, '', fontStyle)
         
-        this.locX = this.game.add.text(16, 176, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.locX = this.game.add.text(16, 128+16+16+16, '', fontStyle);
         this.locX.fixedToCamera = true;
-        this.locX.cameraOffset.set(16, 176);
+        this.locX.cameraOffset.set(16, 128+16+16+16);
+        //this.game.add.text(16, 144+16+16+16, '', fontStyle)
         
-        this.text4 = this.game.add.text(16, 208, '', { font: '13px Anonymous Pro', fill: '#aea' });
+        this.text4 = this.game.add.text(16, 160+16+16+16, '', fontStyle);
         this.text4.fixedToCamera = true;
         this.text4.cameraOffset.set(16, 208);
-
-        console.log("rotation: " + ship.rotation);
 
     }
     public update(game: Phaser.Game) {
