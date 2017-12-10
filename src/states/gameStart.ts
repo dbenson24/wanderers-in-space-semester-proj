@@ -1,7 +1,15 @@
 import * as Assets from '../assets';
-import { Physics, scaleModes } from 'phaser-ce';
+import { Physics, scaleModes, Time } from 'phaser-ce';
 import {Point, GravityPhysics, GravityBody, BasicGravityBody} from "../physics";
 
+let G = 6.67408*Math.pow(10, -11);
+
+enum TimeScale {
+    RealTime,
+    Fast,
+    Faster,
+    Fastest
+}
 
 export default class gameStart extends Phaser.State {
     private backgroundTemplateSprite: Phaser.Sprite = null;
@@ -27,6 +35,9 @@ export default class gameStart extends Phaser.State {
     private locX: Phaser.Text = null;
     private locY: Phaser.Text = null;
     private text4: Phaser.Text = null;
+    private dateText: Phaser.Text = null;
+
+    private speed: TimeScale = TimeScale.RealTime;
 
 
     // This is any[] not string[] due to a limitation in TypeScript at the moment;
@@ -38,20 +49,20 @@ export default class gameStart extends Phaser.State {
 
     public create(): void {
 
-        let metersPerPixel = 20.0;
-        let frameRate = 1.0/60.0;
-        this.gravityPhysics = new GravityPhysics(metersPerPixel, frameRate);
+        let metersPerPixel = 1200000.0;
+        let frameRate = 1.0/30.0;
+        this.gravityPhysics = new GravityPhysics(metersPerPixel);
 
         console.log("Starting Game!!!")
 
-        console.log('this.game.world.centerX: ' + this.game.world.centerX);
+        console.log('this.game.world.centerX: ' + this.game.world.centerX + " centerY: " + this.game.world.centerY);
         
 
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesSpaceBackground.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
         this.backgroundTemplateSprite.fixedToCamera = true;
         this.backgroundTemplateSprite.cameraOffset.set(this.game.world.centerX, this.game.world.centerY);
-        this.game.world.setBounds(-3000, 3000, 6000, 6000);
+        this.game.world.setBounds(-3000, -3000, 6000, 6000);
 
         
         // PIXI.Sprite.defaultAnchor.x = 0.5;
@@ -60,32 +71,38 @@ export default class gameStart extends Phaser.State {
 
         this.physics.startSystem(Phaser.Physics.P2JS);
 
-        this.moveableMummy = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 150, Assets.Images.SpritesheetsPlanet6.getName());
-        this.planet = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.SpritesheetsPlanet18.getName());
+        this.moveableMummy = this.game.add.sprite(0, 0, Assets.Images.SpritesheetsPlanet6.getName());
+        this.planet = this.game.add.sprite(0, 0, Assets.Images.SpritesheetsPlanet18.getName());
         this.moveableMummy.anchor.setTo(0.5);
         this.moveableMummy.scale.setTo(0.1);
         this.planet.anchor.setTo(0.5);
+        this.planet.name = "Earth";
+        this.moveableMummy.name = "Moon";
 
-        let ship = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY + 80, Assets.Images.ImagesShip1.getName());
+        let ship = this.game.add.sprite(0, 0, Assets.Images.ImagesShip1.getName());
         ship.scale.setTo(0.2);
         ship.anchor.setTo(0.5);
         this.ship = ship;
+        ship.name = "Ship";
 
         this.game.camera.follow(ship, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
         this.planet.scale.setTo(0.2);
+        // moon
+        this.movingBody = new BasicGravityBody(this.moveableMummy, 7.34767309 * Math.pow(10, 22), 0, -384400000.0, 1737000);
+        // earth
+        let stationaryBody = new BasicGravityBody(this.planet, 5.972 * Math.pow(10, 24), 0, 0, 6371000);
 
-        this.movingBody = new BasicGravityBody(this.moveableMummy, metersPerPixel,  10000000.0);
-        let stationaryBody = new BasicGravityBody(this.planet, metersPerPixel, 1000000000.0);
-
-        this.shipBody = new BasicGravityBody(this.ship, metersPerPixel, 20.0, 5000.0);
+        this.shipBody = new BasicGravityBody(this.ship, 1000.0, 0, -35786000.0, 100.0, 100000.0);
 
         this.gravityPhysics.addBody(this.movingBody);
         this.gravityPhysics.addBody(stationaryBody);
         this.gravityPhysics.addBody(this.shipBody);
 
-        this.movingBody.vx = Math.sqrt(stationaryBody.mass / this.gravityPhysics.distanceBetween(this.movingBody.loc, stationaryBody.loc));
-        this.shipBody.vx = Math.sqrt(stationaryBody.mass / this.gravityPhysics.distanceBetween(this.shipBody.loc, stationaryBody.loc));
+        this.movingBody.vx = Math.sqrt(G * stationaryBody.mass / this.gravityPhysics.distanceBetween(this.movingBody.loc, stationaryBody.loc));
+        this.shipBody.vx = Math.sqrt(G * stationaryBody.mass / this.gravityPhysics.distanceBetween(this.shipBody.loc, stationaryBody.loc));
+
+        this.gravityPhysics.updateBodyPositions(0);
 
         let fontStyle = { font: '13px Anonymous Pro', fill: '#aea' };
 
@@ -119,13 +136,29 @@ export default class gameStart extends Phaser.State {
         this.locX.cameraOffset.set(16, 128+16+16+16);
         //this.game.add.text(16, 144+16+16+16, '', fontStyle)
         
-        this.text4 = this.game.add.text(16, 160+16+16+16, '', fontStyle);
+        this.text4 = this.game.add.text(16, 208, '', fontStyle);
         this.text4.fixedToCamera = true;
         this.text4.cameraOffset.set(16, 208);
 
+        this.dateText = this.game.add.text(16, 240, '', fontStyle);
+        this.dateText.fixedToCamera = true;
+        this.dateText.cameraOffset.set(16, 240);
+
+        let period = this.game.input.keyboard.addKey(Phaser.Keyboard.PERIOD);
+        period.onDown.add(() => {
+            if (this.speed !== TimeScale.Fastest) {
+                this.speed++;
+            }
+        })
+
+        let comma = this.game.input.keyboard.addKey(Phaser.Keyboard.COMMA);
+        comma.onDown.add(() => {
+            if (this.speed !== TimeScale.RealTime) {
+                this.speed--;
+            }
+        })
     }
     public update(game: Phaser.Game) {
-
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
             this.ship.rotation -= Math.PI / 180;
         }
@@ -137,14 +170,39 @@ export default class gameStart extends Phaser.State {
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
             this.shipBody.engineOn = true;
             console.log("Engine Fired !!!!!!");
+            this.speed = TimeScale.RealTime;
         }
 
-        this.gravityPhysics.updateBodyPositions();
+        switch(this.speed) {
+            case TimeScale.RealTime:
+                this.gravityPhysics.updateBodyPositions(1/60.0);
+                break;
+            case TimeScale.Fast:
+                this.gravityPhysics.updateBodyPositions(1);
+                break;
+            case TimeScale.Faster:
+                for (let i = 0; i < 40; i++) {
+                    this.gravityPhysics.updateBodyPositions(2.5);
+                }
+                break;
+            case TimeScale.Fastest:
+                for (let i = 0; i < 100; i++) {
+                    this.gravityPhysics.updateBodyPositions(10);
+                }
+                break;
+        }
+
+        if (true) {
+        }
+        //{
+        //    this.gravityPhysics.updateBodyPositions(1/30.0);
+        //}
         this.shipBody.engineOn = false;
         this.hValue.setText("   Horizontal Value : " + this.movingBody.vx.toFixed(2));
         this.vValue.setText("   Vertical Value      : " + this.movingBody.vy.toFixed(2));
         this.locX.setText("   loc - X                 : " + this.movingBody.loc.x.toFixed(2));
         this.text4.setText("   loc - Y                 : " + this.movingBody.loc.y.toFixed(2));
+        this.dateText.setText("   Date                    : " + this.gravityPhysics.date.toLocaleString());
         for (let i = 0; i < this.gravityPhysics.bodies.length; i++) {
             if (Object.is(this.shipBody, this.gravityPhysics.bodies[i])) {
                 continue;

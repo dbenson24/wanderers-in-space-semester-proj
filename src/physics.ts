@@ -1,22 +1,24 @@
 import * as Assets from './assets';
 import { Physics, scaleModes } from 'phaser-ce';
 
+let G = 6.67408*Math.pow(10, -11);
+
 export class GravityPhysics {
     public metersPerPixel: number;
-    public tickRate: number;
     public bodies: GravityBody[];
+    public date: Date;
 
-    constructor(metersPerPixel: number, tickRate: number) {
+    constructor(metersPerPixel: number) {
         this.metersPerPixel = metersPerPixel;
         this.bodies = [];
-        this.tickRate = tickRate;
+        this.date = new Date();
     }
 
     public addBody(body: GravityBody) {
         this.bodies.push(body);
     }
 
-    public updateBodyPositions() {
+    public updateBodyPositions(seconds: number) {
         for (let i = 0; i < this.bodies.length; i++) {
             let curr = this.bodies[i];
             let forceX = 0;
@@ -32,7 +34,7 @@ export class GravityPhysics {
                 if (target === curr) {
                     continue;
                 }
-                let rawForce = (curr.mass * target.mass) / Math.pow(this.distanceBetween(curr.loc, target.loc), 2);
+                let rawForce = G * (curr.mass * target.mass) / Math.pow(this.distanceBetween(curr.loc, target.loc), 2);
                 let angle = this.getAngleTo(curr.loc, target.loc);
                 let dforceX = rawForce * Math.cos(angle);
                 let dforceY = rawForce * Math.sin(angle);
@@ -42,18 +44,20 @@ export class GravityPhysics {
             let accelX = forceX / curr.mass;
             let accelY = forceY / curr.mass;
 
-            curr.vx += accelX * this.tickRate;
-            curr.vy += accelY * this.tickRate;
+            curr.vx += accelX * seconds;
+            curr.vy += accelY * seconds;
         }
 
         for (let i = 0; i < this.bodies.length; i++) {
             let curr = this.bodies[i];
-            curr.loc.x += curr.vx * this.tickRate;
-            curr.loc.y += curr.vy * this.tickRate;
+            curr.loc.x += curr.vx * seconds;
+            curr.loc.y += curr.vy * seconds;
 
             curr.sprite.centerX = curr.loc.x / this.metersPerPixel;
             curr.sprite.centerY = -curr.loc.y / this.metersPerPixel;
+            //console.log(`${curr.sprite.name} is at (${curr.sprite.centerX}, ${curr.sprite.centerY})`);
         }
+        this.date.setMilliseconds(this.date.getMilliseconds() + seconds*1000);
     }
 
     public distanceBetween(b1: Point, b2: Point): number {
@@ -97,9 +101,7 @@ export class BasicGravityBody implements GravityBody {
     public engineOn: boolean;
     public radius: Meters;
 
-    constructor(sprite: Phaser.Sprite, metersPerPixel: number, mass: Kilogram, engineForce: number = 0) {
-        let x = sprite.centerX * metersPerPixel;
-        let y = sprite.centerY * metersPerPixel * -1.0;
+    constructor(sprite: Phaser.Sprite, mass: Kilogram, x: Meters = 0, y: Meters = 0, radius: Meters = 0, engineForce: number = 0) {
         this.loc = {
             x: x,
             y: y
@@ -110,7 +112,7 @@ export class BasicGravityBody implements GravityBody {
         this.vy = 0;
         this.engineForce = engineForce;
         this.engineOn = false;
-        this.radius = ((sprite.width/2) * metersPerPixel);
+        this.radius = radius;
     }
 
     public collisionOccured(otherBody: GravityBody): boolean { 
