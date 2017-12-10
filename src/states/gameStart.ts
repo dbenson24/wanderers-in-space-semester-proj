@@ -46,6 +46,7 @@ export default class gameStart extends Phaser.State {
 
     private movingBody: BasicGravityBody;
     private shipBody: BasicGravityBody;
+    private earthBody: BasicGravityBody;
 
     public create(): void {
 
@@ -61,7 +62,7 @@ export default class gameStart extends Phaser.State {
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesSpaceBackground.getName());
         this.backgroundTemplateSprite.anchor.setTo(0.5);
         this.backgroundTemplateSprite.fixedToCamera = true;
-        this.backgroundTemplateSprite.cameraOffset.set(this.game.world.centerX, this.game.world.centerY);
+        this.backgroundTemplateSprite.cameraOffset.set(this.game.width/2, this.game.height/2);
         this.game.world.setBounds(-3000, -3000, 6000, 6000);
 
         
@@ -89,10 +90,10 @@ export default class gameStart extends Phaser.State {
 
         this.planet.scale.setTo(0.2);
         // moon
-        this.movingBody = new BasicGravityBody(this.moveableMummy, 7.34767309 * Math.pow(10, 22), 0, -384400000.0, 1737000);
+        this.movingBody = new BasicGravityBody(this.moveableMummy, 7.34767309 * Math.pow(10, 22), 0, -384400000.0, 1737000.0);
         // earth
-        let stationaryBody = new BasicGravityBody(this.planet, 5.972 * Math.pow(10, 24), 0, 0, 6371000);
-
+        let stationaryBody = new BasicGravityBody(this.planet, 5.972 * Math.pow(10, 24), 0, 0, 6371000.0);
+        this.earthBody = stationaryBody;
         this.shipBody = new BasicGravityBody(this.ship, 1000.0, 0, -35786000.0, 100.0, 100000.0);
 
         this.gravityPhysics.addBody(this.movingBody);
@@ -104,8 +105,8 @@ export default class gameStart extends Phaser.State {
 
         this.gravityPhysics.updateBodyPositions(0);
 
-        let fontStyle = { font: '13px Anonymous Pro', fill: '#aea' };
-
+        let fontStyle: Phaser.PhaserTextStyle = { font: '13px Anonymous Pro', fill: '#aea' };
+        
         let t = this.game.add.text(16, 16, 'Statistics Table', fontStyle);
         t.fixedToCamera = true;
         t.cameraOffset.set(16, 16);
@@ -198,10 +199,12 @@ export default class gameStart extends Phaser.State {
         //    this.gravityPhysics.updateBodyPositions(1/30.0);
         //}
         this.shipBody.engineOn = false;
-        this.hValue.setText("   Horizontal Value : " + this.movingBody.vx.toFixed(2));
-        this.vValue.setText("   Vertical Value      : " + this.movingBody.vy.toFixed(2));
-        this.locX.setText("   loc - X                 : " + this.movingBody.loc.x.toFixed(2));
-        this.text4.setText("   loc - Y                 : " + this.movingBody.loc.y.toFixed(2));
+        this.hValue.setText(  "   X Velocity (m/s)        : " + this.shipBody.vx.toFixed(2));
+        this.vValue.setText(  "   Y Velocity (m/s)        : " + this.shipBody.vy.toFixed(2));
+        this.locX.setText(    "   Distance to Earth (m)   : " + this.gravityPhysics.distanceBetween(this.shipBody.loc, 
+                                                                                                    this.earthBody.loc).toFixed(2));
+        this.text4.setText(   "   Distance to Moon        : " + this.gravityPhysics.distanceBetween(this.shipBody.loc, 
+                                                                                                    this.movingBody.loc).toFixed(2));
         this.dateText.setText("   Date                    : " + this.gravityPhysics.date.toLocaleString());
         for (let i = 0; i < this.gravityPhysics.bodies.length; i++) {
             if (Object.is(this.shipBody, this.gravityPhysics.bodies[i])) {
