@@ -1,6 +1,11 @@
 /* AUTO GENERATED FILE. DO NOT MODIFY. YOU WILL LOSE YOUR CHANGES ON BUILD. */
 
 export namespace Images {
+    export class ImagesBackgroundTemplate {
+        static getName(): string { return 'background_template'; }
+
+        static getPNG(): string { return require('assets/images/background_template.png'); }
+    }
     export class ImagesCyberpunkFarEdit3 {
         static getName(): string { return 'cyberpunk-far-edit3'; }
 
@@ -189,6 +194,16 @@ export namespace Atlases {
 }
 
 export namespace Audio {
+    export class AudioEngine {
+        static getName(): string { return 'engine'; }
+
+        static getWAV(): string { return require('assets/audio/engine.wav'); }
+    }
+    export class AudioFire {
+        static getName(): string { return 'fire'; }
+
+        static getMP3(): string { return require('assets/audio/fire.mp3'); }
+    }
     export class AudioMusic {
         static getName(): string { return 'music'; }
 

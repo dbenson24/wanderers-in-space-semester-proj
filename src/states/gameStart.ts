@@ -39,10 +39,7 @@ export default class gameStart extends Phaser.State {
 
     private speed: TimeScale = TimeScale.RealTime;
 
-
-    // This is any[] not string[] due to a limitation in TypeScript at the moment;
-    // despite string enums working just fine, they are not officially supported so we trick the compiler into letting us do it anyway.
-    private sfxLaserSounds: any[] = null;
+    private engineSound: Phaser.Sound = null;
 
     private movingBody: BasicGravityBody;
     private shipBody: BasicGravityBody;
@@ -53,9 +50,8 @@ export default class gameStart extends Phaser.State {
         let frameRate = 1.0/30.0;
         this.gravityPhysics = new GravityPhysics(metersPerPixel);
 
-        console.log("Starting Game!!!")
 
-        console.log('this.game.world.centerX: ' + this.game.world.centerX + " centerY: " + this.game.world.centerY);
+        this.engineSound = this.game.sound.add(Assets.Audio.AudioFire.getName());
         
 
         this.backgroundTemplateSprite = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, Assets.Images.ImagesSpaceBackground.getName());
@@ -169,8 +165,10 @@ export default class gameStart extends Phaser.State {
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
             this.shipBody.engineOn = true;
-            console.log("Engine Fired !!!!!!");
+            console.log("Engine Fired");
             this.speed = TimeScale.RealTime;
+            this.engineSound.play();
+
         }
 
         switch(this.speed) {
@@ -210,12 +208,10 @@ export default class gameStart extends Phaser.State {
             if (this.shipBody.collisionOccured(this.gravityPhysics.bodies[i])) { 
                 if (this.shipBody.collisionSurvivable(this.gravityPhysics.bodies[i])) { 
                     // TODO: Change to win condition
-                    console.log('WIN!!!!')
                     this.goNext();
 
                 }
                 else { 
-                    console.log('LOST!!!!')
                     // TODO: Change to loss condition
                     this.goNext();
                 }
