@@ -25,14 +25,11 @@ export default class Intro extends Phaser.State {
     this.wordIndex = 0
 
     this.textContent = [
-      'This is an orbit simulation where players are able to assemble',
-      'their own spaceship and launch it into the space. The program is mainly',
-      'divided into two phases: assembling phase, and launching phase.',
-      'In the assembling phase, the user has the options of configuring several different',
-      'rocket models that we built into the program, each with a different',
-      'number of mass/fuel ratios.',
-      'In the launching phase, the user is able to launch the rocket and guide it to orbit.',
+      'This is an orbit simulation where players control their own spaceship',      
+      'The user is able to guide it to orbit by firing the engine.',
       'Orbits will be dynamically calculated using Kepler’s laws/orbital mechanics.',
+      'All the statistics will be dynamically displayed in a table',
+      'The player can speed up/slow down the time in the simulation by , or . ',
       'Have fun!'
     ]
 
