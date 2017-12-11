@@ -26,10 +26,10 @@ export default class Intro extends Phaser.State {
 
     this.textContent = [
       'This is an orbit simulation where players control their own spaceship',      
-      'The user is able to guide it to orbit by firing the engine.',
+      'The user is able to guide it to orbit by firing the engine with the key w.',
       'Orbits will be dynamically calculated using Kepler’s laws/orbital mechanics.',
       'All the statistics will be dynamically displayed in a table',
-      'The player can speed up/slow down the time in the simulation by , or . ',
+      'The player can speed up/slow down the time in the simulation with keys , and . ',
       'Have fun!'
     ]
 
