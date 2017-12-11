@@ -108,12 +108,12 @@ export default class gameStart extends Phaser.State {
         t.cameraOffset.set(16, 16);
         // this.game.add.text(16, 32, '', fontStyle)
         
-        let sm = this.game.add.text(16, 48, "   Spaceship Mass   : " + this.movingBody.mass.toFixed(2), fontStyle);
+        let sm = this.game.add.text(16, 48, "   Spaceship Mass   : " + this.shipBody.mass.toFixed(2), fontStyle);
         sm.fixedToCamera = true;
         sm.cameraOffset.set(16, 48);
         //this.game.add.text(16, 48+16, '', fontStyle)
 
-        let pm = this.game.add.text(16, 48+16+16, "   Planet Mass         : " + stationaryBody.mass.toFixed(2), fontStyle);
+        let pm = this.game.add.text(16, 48+16+16, "   Earth  Mass         : " + stationaryBody.mass.toFixed(2), fontStyle);
         pm.fixedToCamera = true;
         pm.cameraOffset.set(16, 80);
 
@@ -201,7 +201,7 @@ export default class gameStart extends Phaser.State {
         this.vValue.setText(  "   Y Velocity (m/s)        : " + this.shipBody.vy.toFixed(2));
         this.locX.setText(    "   Distance to Earth (m)   : " + this.gravityPhysics.distanceBetween(this.shipBody.loc, 
                                                                                                     this.earthBody.loc).toFixed(2));
-        this.text4.setText(   "   Distance to Moon        : " + this.gravityPhysics.distanceBetween(this.shipBody.loc, 
+        this.text4.setText(   "   Distance to Moon (m)     : " + this.gravityPhysics.distanceBetween(this.shipBody.loc, 
                                                                                                     this.movingBody.loc).toFixed(2));
         this.dateText.setText("   Date                    : " + this.gravityPhysics.date.toLocaleString());
         for (let i = 0; i < this.gravityPhysics.bodies.length; i++) {
