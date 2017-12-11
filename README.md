@@ -5,6 +5,7 @@
 # Setup:
 
 ## 0. Install Git (if you do not have Git Installed):
+
 [GIT Installation Instructions and Links][git-scm]
 
 ## 1. Download or Clone this repo:
