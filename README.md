@@ -1,6 +1,6 @@
 # Astronomy Semester Group Project - Orbital Simulation
 
-![PhaserNPMWebpackTypeScriptStarterProject](https://www.facebook.com/messages/t/100006427923960)
+![PhaserNPMWebpackTypeScriptStarterProject](https://scontent.fzty2-1.fna.fbcdn.net/v/t35.0-12/25286246_2485929048298002_477545884_o.png?oh=5cba7779a0337f8948eeee63d12cfb37&oe=5A30A69C)
 
 ##### Hit the ground running and make some great games!
 
