@@ -65,3 +65,10 @@ This will run a server that serves our built game straight to the browser and wi
 - **webpack.dev.config.js** – Webpack config for the DEV build
 - **webpack.dist.config.js** – Webpack config for the DIST build
 
+### Game Controls
+- W - Thrust Forward
+- A - Turn Left
+- D - Turn Right
+- , - Slow Down Time
+- . - Speed Up Time
+
